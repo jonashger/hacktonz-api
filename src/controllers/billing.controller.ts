@@ -100,7 +100,7 @@ const webhookSulcredi = async (req: Request, res: Response) => {
       },
     });
 
-    const event = await prisma.billing.findFirst({
+    const billing = await prisma.billing.findFirst({
       where: {
         txId: txid,
       },
@@ -108,11 +108,11 @@ const webhookSulcredi = async (req: Request, res: Response) => {
         eventId: true,
       },
     });
-    if (!event) {
+    if (!billing) {
       throw new Error("Evento não encontrado");
     }
 
-    playerController.confirmPresence(newPlayer.id, event?.eventId || "1");
+    playerController.confirmPresence(newPlayer.id, billing.eventId!);
 
     res.json({ message: "Cobrança paga e jogador confirmado." });
   } catch (error) {

@@ -3,6 +3,13 @@ import prisma from "../prisma/prismaClient";
 
 const createPlayer = async (cpf: string, name: string) => {
   try {
+    const player = await prisma.player.findFirst({
+      where: { cpf },
+    });
+    if (player) {
+      return player;
+    }
+
     const newPlayer = await prisma.player.create({
       data: {
         cpf,

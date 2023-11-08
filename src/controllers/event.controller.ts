@@ -20,7 +20,7 @@ const createEvent = async (req: Request, res: Response) => {
     keyPix,
   } = req.body;
 
-  clientAuth
+  await clientAuth
     .auth(clientId, clientSecret)
     .then(async (data) => {
       if (!data.access_token) {
@@ -31,9 +31,7 @@ const createEvent = async (req: Request, res: Response) => {
 
       const http = await clientAuth.httpClient();
 
-      // const internWebHook = "https://api.fut.hger.com.br/billing/sulcredi";
-      const internWebHook =
-        "https://webhook.site/ecc92544-db89-4004-9326-7800d55f77d3";
+      const internWebHook = process.env.SERVER_URL + "/billing/sulcredi";
 
       return http
         .put(
