@@ -1,0 +1,41 @@
+{
+  "name": "myfut-api",
+  "version": "1.0.0",
+  "description": "My Fut API",
+  "main": "src/server.ts",
+  "author": "Guilherme Viana Grasel",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node src/server.ts",
+    "seed": "node --loader ts-node/esm prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "compilerOptions": {
+    "module": "CommonJS"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.5.2",
+    "argon2": "^0.30.3",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "prisma": "^5.5.2",
+    "tsc": "^2.0.4",
+    "typescript": "^5.2.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.20",
+    "@types/node": "^20.8.10",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.29.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "esm": "^3.2.25",
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.1"
+  }
+}

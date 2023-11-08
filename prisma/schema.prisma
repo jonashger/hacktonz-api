@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// USUÁRIO
+model player {
+  id String @id @default(uuid())
+
+  cpf    String
+  name   String
+  active Boolean @default(true)
+
+  billings     billing[]
+  event_player event_player[]
+}
+
+// ENDEREÇO
+model address {
+  id String @id @default(uuid())
+
+  address String
+  number  String
+  city    String
+  state   String
+  zipCode String
+}
+
+//LOCAL
+model place {
+  id          String @id @default(uuid())
+  description String
+  address     String
+
+  modalityPlace modalityPlace[]
+}
+
+model modality {
+  id            String          @id @default(uuid())
+  description   String
+  modalityPlace modalityPlace[]
+}
+
+model modalityPlace {
+  id         String  @id @default(uuid())
+  modalityId String  @map("modality_id")
+  placeId    String  @map("place_id")
+  active     Boolean @default(true)
+
+  modality modality @relation(fields: [modalityId], references: [id])
+  place    place    @relation(fields: [placeId], references: [id])
+  event    event[]
+
+  @@map("modality_place")
+}
+
+// EVENTO
+model event {
+  id              String    @id @default(uuid())
+  title           String?
+  description     String?
+  modalityPlaceId String    @map("modality_place_id")
+  password        String
+  value           Float
+  individualValue Float
+  date            DateTime
+  dateEnd         DateTime?
+  active          Boolean   @default(true)
+  maxPlayers      Int
+  minPlayers      Int
+  keyPix          String
+  clientId        String?
+  clientSecret    String?
+
+  modalityPlace modalityPlace @relation(fields: [modalityPlaceId], references: [id])
+
+  event_player event_player[]
+  billing      billing[]
+}
+
+// PAGAMENTO
+model billing {
+  id             String    @id @default(uuid())
+  event_playerId String?
+  eventId        String?
+  playerId       String?
+  value          Float?
+  date           DateTime?
+  endToEnd       String?
+  status         Int? // 0 - Pendente, 1 - Pago, 2 - Cancelado
+  txId           String?
+  brCode         String?
+
+  event        event?        @relation(fields: [eventId], references: [id])
+  player       player?       @relation(fields: [playerId], references: [id])
+  event_player event_player? @relation(fields: [event_playerId], references: [id])
+}
+
+//EVENTO - USUÁRIO
+model event_player {
+  id       String  @id @default(uuid())
+  playerId String
+  eventId  String
+  active   Boolean @default(true)
+
+  player  player    @relation(fields: [playerId], references: [id])
+  event   event     @relation(fields: [eventId], references: [id])
+  billing billing[]
+}
+
+// INTEGRAÇÕES PIX
+model integrations {
+  id               String  @id @default(uuid()) @db.Uuid
+  name             String  @db.VarChar(200)
+  clientIdMtls     String? @map("client_id_mtls") @db.VarChar(200)
+  clientSecretMtls String? @map("client_secret_mtls") @db.VarChar(200)
+  pfxMtls          Bytes?  @map("pfx_mtls")
+  passphraseMtls   String? @map("passphrase_mtls") @db.VarChar(200)
+  endpoint         String? @db.VarChar(200)
+  pixKey           String?
+}

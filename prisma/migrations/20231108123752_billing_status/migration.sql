@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "billing" ADD COLUMN     "status" INTEGER,
+ALTER COLUMN "value" DROP NOT NULL,
+ALTER COLUMN "date" DROP NOT NULL,
+ALTER COLUMN "endToEnd" DROP NOT NULL;
